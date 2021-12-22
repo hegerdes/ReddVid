@@ -25,20 +25,27 @@ limiter = Limiter(app,
                   key_func=get_remote_address,
                   default_limits=["10 per hour"]
                   )
-
+cache_dict = dict()
 
 @app.route('/')
 def hello():
     url = ''
     try:
-        url = request.json['url']
-    except KeyError:
+        url = request.form['url']
+        # Cache check
+        if (url in cache_dict):
+            logging.info('Found {} in cache'.format(url))
+            return Response(json.dumps({"download": cache_dict[url]}), mimetype='application/json', status=200)
+    except (TypeError, KeyError):
         return Response(
             "No URL fiel in request body",
             status=400,
         )
     try:
         av_path = combineAV(*downloadAV(*getAVurl(url)))
+
+        # Save for caching
+        cache_dict[url] = av_path
         return Response(json.dumps({"download": av_path}), mimetype='application/json', status=200)
     except (AttributeError, KeyError, ConnectionRefusedError, ConnectionError):
         return Response(
