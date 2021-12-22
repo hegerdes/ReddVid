@@ -1,0 +1,7 @@
+.git
+.devcontainer
+*.mp3
+*.mp4
+env
+tmp
+Dockerfile
