@@ -15,4 +15,4 @@ HEALTHCHECK  --interval=60s --retries=3 \
     CMD curl --fail http://localhost/health || kill 1
 
 # ENTRYPOINT [ "gunicorn", "-w 8","-b 0.0.0.0:5000" ,"app:app" ]
-CMD [ "gunicorn", "-w 2","-b 0.0.0.0:80" ,"app:app" ]
+CMD gunicorn -w 2 -b 0.0.0.0:$PORT app:app
