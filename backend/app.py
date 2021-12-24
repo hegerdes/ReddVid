@@ -28,7 +28,7 @@ limiter = Limiter(app,
 cache_dict = dict()
 
 @app.route('/', methods = ['GET','POST'])
-def hello():
+def generateVideoURL():
     url = ''
     try:
         url = request.form['url']
