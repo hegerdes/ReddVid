@@ -27,7 +27,7 @@ limiter = Limiter(app,
                   )
 cache_dict = dict()
 
-@app.route('/')
+@app.route('/', methods = ['GET','POST'])
 def hello():
     url = ''
     try:
