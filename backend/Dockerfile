@@ -2,7 +2,7 @@ FROM python:3.10-alpine
 
 WORKDIR /app
 COPY requirements.txt /app
-RUN apk add ffmpeg curl\
+RUN apk add ffmpeg curl py3-lxml \
     && pip install -r requirements.txt \
     && addgroup -S python \
     && adduser -S python -G python \
@@ -24,4 +24,4 @@ HEALTHCHECK  --interval=60s --retries=3 \
     CMD curl --fail http://localhost:$PORT/health || kill 1
 
 # ENTRYPOINT [ "gunicorn", "-w 8","-b 0.0.0.0:$PORT" ,"app:app" ]
-CMD gunicorn -w 8 -b 0.0.0.0:$PORT app:app
+CMD gunicorn -w 16 -b 0.0.0.0:$PORT app:app
