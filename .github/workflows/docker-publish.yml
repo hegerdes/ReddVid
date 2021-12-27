@@ -70,12 +70,13 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: backend
+          platforms: linux/amd64,linux/arm64,linux/armv7
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             hegerdes/reddvid:${{github.ref_name}}
             hegerdes/reddvid:latest
-            ghcr.io/{{github.actor}}/reddvid:${{github.ref_name}}
-            ghcr.io/{{github.actor}}/reddvid:latest
+            ghcr.io/{{ github.actor }}/reddvid:${{github.ref_name}}
+            ghcr.io/{{ github.actor }}/reddvid:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       # # Sign the resulting Docker image digest except on PRs.
