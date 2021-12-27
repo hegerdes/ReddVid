@@ -2,11 +2,15 @@ FROM python:3.10-alpine
 
 WORKDIR /app
 COPY requirements.txt /app
-RUN apk add ffmpeg curl py3-lxml \
+RUN apk add ffmpeg curl \
+    && if [ $(arch) != "x86_64" ]; \
+    then apk add libxml2-dev libxslt-dev gcc musl-dev; fi \
     && pip install -r requirements.txt \
     && addgroup -S python \
     && adduser -S python -G python \
-    && chmod -R 777 /app
+    && chmod -R 777 /app \
+    && if [ $(arch) != "x86_64" ]; \
+    then apk del libxml2-dev libxslt-dev gcc musl-dev; fi
 
 USER python
 COPY --chown=python:python . /app
