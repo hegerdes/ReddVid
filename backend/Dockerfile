@@ -5,7 +5,7 @@ COPY requirements.txt /app
 RUN apk add ffmpeg curl \
     && if [ $(arch) != "x86_64" ]; \
     then apk add libxml2-dev libxslt-dev gcc musl-dev; fi \
-    && pip install -r requirements.txt \
+    && python -m pip install -r requirements.txt \
     && addgroup -S python \
     && adduser -S python -G python \
     && chmod -R 777 /app \
