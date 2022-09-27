@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+
+  reddvid-backend:
+    image: hegerdes/reddvid:backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    environment:
+      - PORT=8080
+
+  reddvid-frontend:
+    image: hegerdes/reddvid:frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+      # args:
+      #   - BACKEND=http://reddvide-backend:8080
+    ports:
+      - 8080:80
+
