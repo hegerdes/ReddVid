@@ -22,7 +22,7 @@ export default {
     ]
   },
   env: {
-    BACKEND_URL: process.env.BACKEND_URL || 'https://reddvid.herokuapp.com'
+    BACKEND_URL: process.env.BACKEND_URL || '/api'
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
