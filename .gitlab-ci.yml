@@ -40,4 +40,4 @@ package:
     CHART_VERSION: 0.1.0
   script:
     - helm package --app-version $CI_COMMIT_SHORT_SHA --version $CHART_VERSION charts
-    - curl --request POST --user gitlab-ci-token:$CI_JOB_TOKEN --form "chart=@charts-$CHART_VERSION.tgz" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/stable/charts"
+    - curl --request POST --user gitlab-ci-token:$CI_JOB_TOKEN --form "chart=@reddvid-$CHART_VERSION.tgz" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/stable/charts"
