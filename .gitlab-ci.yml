@@ -32,7 +32,9 @@ build-frontend:
     - if: $CI_COMMIT_BRANCH
 
 package:
-  image: alpine/helm
+  image:
+    name: alpine/helm
+    entrypoint: ['']
   stage: build
   variables:
     CHART_VERSION: 0.1.0
