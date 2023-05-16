@@ -3,4 +3,5 @@
 *.pyc
 env
 tmp
-frontend-v2/
+.vscode
+frontend-v2
