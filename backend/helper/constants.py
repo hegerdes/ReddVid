@@ -1,1 +1,1 @@
-tmp_path = 'tmp/'
+tmp_path = '/tmp/'

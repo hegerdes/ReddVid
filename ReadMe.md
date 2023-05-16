@@ -14,7 +14,7 @@ I wanted people to be able to use the backend directly, so it is possible to dow
 ```bash
 # Add this function to yor terminal session - or put it into your .bash_rc
 reddvid () {
-    wget https://reddvid.herokuapp.com/$(curl -X GET 'https://reddvid.herokuapp.com/' --form "url=\"${1}\"}"  | jq -r '.download')
+    wget https://reddvid.herokuapp.com/$(curl -X GET 'https://reddvid.herokuapp.com/' --form "url=\"${1}\"}" | jq -r '.download')
 }
 # Call the function
 reddvid <REDDIT_URL>

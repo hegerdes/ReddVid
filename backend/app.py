@@ -10,7 +10,7 @@ from flask_cors import CORS
 from flask_limiter.util import get_remote_address
 from flask_limiter import Limiter
 from requests.exceptions import ConnectionError
-from downloader import downloadAV, getAVurl, combineAV
+from helper.downloader import downloadAV, getAVurl, combineAV
 
 # Setting logging
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -21,10 +21,10 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = const.tmp_path[:-1]
 cors = CORS(app)
 logging.info('Adding limiter')
-limiter = Limiter(app,
-                  key_func=get_remote_address,
-                  default_limits=["10 per hour"]
-                  )
+limiter = Limiter(
+                app,key_func=get_remote_address,
+                default_limits=["10 per hour"]
+                )
 cache_dict = dict()
 
 @app.route('/', methods = ['GET','POST'])
@@ -32,37 +32,32 @@ def generateVideoURL():
     url = ''
     try:
         url = request.form['url']
+        logging.info('Request {} from {} for {}'.format(request.method, request.host, url))
+
         # Cache check
         if (url in cache_dict):
             logging.info('Found {} in cache'.format(url))
             return Response(json.dumps({"download": cache_dict[url]}), mimetype='application/json', status=200)
     except (TypeError, KeyError):
-        return Response(
-            "No URL fiel in request body",
-            status=400,
-        )
+        return Response("No URL fiel in request body", status=400)
     try:
         av_path = combineAV(*downloadAV(*getAVurl(url)))
+
 
         # Save for caching
         cache_dict[url] = av_path
         return Response(json.dumps({"download": av_path}), mimetype='application/json', status=200)
-    except (AttributeError, KeyError, ConnectionRefusedError, ConnectionError):
-        return Response(
-            "No resources found at the provided URL",
-            status=404,
-        )
-    except Exception as err:
-        logging.error(err, url)
-        return Response(
-            "Internal Server Error. Please Inform Support",
-            status=503,
-        )
+    except (KeyError, ConnectionRefusedError, ConnectionError) as err:
+        raise err
+        return Response("No resources found at the provided URL", status=404)
+    # except Exception as err:
+    #     logging.error(err, url)
+    #     return Response("Internal Server Error. Please Inform Support", status=503)
 
 
 @app.route('/' + const.tmp_path + '<video_id>')
 def page(video_id):
-    logging.info('Download reqest for ' + video_id)
+    logging.info('Download request for {}'.format(video_id))
     vids = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])
     return send_from_directory(vids, video_id)
 
