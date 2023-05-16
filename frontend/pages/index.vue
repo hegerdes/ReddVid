@@ -22,7 +22,7 @@
               </div>
               <v-card-actions>
                 <v-spacer />
-                <v-btn @click="genereteDownloadURL" color="primary">
+                <v-btn color="primary" @click="genereteDownloadURL">
                   Continue
                 </v-btn>
                 <v-spacer />
@@ -33,7 +33,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn @click="DownloadVid" color="primary"> Download </v-btn>
+                  <v-btn color="primary" @click="DownloadVid"> Download </v-btn>
                   <v-spacer />
                 </v-card-actions>
               </div>
@@ -66,51 +66,50 @@
 
 <script>
 export default {
-  name: "IndexPage",
+  name: 'IndexPage',
   data() {
     return {
       running: false,
       video_found: false,
       error: false,
       slugs: [],
-      url: "",
-      video: "",
-      backend: process.env.BACKEND_URL,
+      url: '',
+      video: '',
+      backend: process.env.BACKEND_URL
     };
   },
   methods: {
     async genereteDownloadURL() {
       try {
-        this.running = true;
-        this.error = false;
-        const formdata = new FormData();
-        formdata.append("url", this.url);
+        this.running = true
+        this.error = false
+        const formdata = new FormData()
+        formdata.append('url', this.url)
 
         const requestOptions = {
-          method: "POST",
+          method: 'POST',
           body: formdata,
-          redirect: "follow",
-        };
+          redirect: 'follow'
+        }
 
-        const api_res = await fetch(this.backend, requestOptions);
-        const res = await api_res.json();
-        this.video_found = true;
-        console.log(res);
-        this.video = res["download"];
+        const apiRes = await fetch(this.backend, requestOptions)
+        const res = await apiRes.json()
+        this.video_found = true
+        this.video = res.download
       } catch (err) {
-        this.error = true;
+        this.error = true
       }
-      this.running = false;
+      this.running = false
     },
     async DownloadVid() {
-      // const res = await fetch(this.backend + this.url);
-      // console.log(this.backend + this.url);
-      // const blob = new Blob([await res.blob()], { type: "video/mp4" });
-      // const link = document.createElement("a");
-      // link.href = URL.createObjectURL(blob);
-      // link.click();
-      window.open(this.backend + "/" + this.video, "_blank");
-    },
-  },
-};
+      // const res = await fetch(this.backend + this.url)
+      // console.log(this.backend + this.url)
+      // const blob = new Blob([await res.blob()], { type: "video/mp4" })
+      // const link = document.createElement("a")
+      // link.href = URL.createObjectURL(blob)
+      // link.click()
+      window.open(this.backend + '/' + this.video, '_blank')
+    }
+  }
+}
 </script>
