@@ -24,7 +24,7 @@ ENV COMMIT_TAG=$COMMIT_TAG
 LABEL commit-hash=$COMMIT_HASH
 LABEL commit-tag=$COMMIT_TAG
 
-HEALTHCHECK  --interval=60s --retries=3 \
+HEALTHCHECK --interval=60s --retries=3 \
     CMD curl --fail http://localhost:$PORT/health || kill 1
 
 # ENTRYPOINT [ "gunicorn", "-w 8","-b 0.0.0.0:$PORT" ,"app:app" ]
