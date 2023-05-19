@@ -26,7 +26,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # https://github.com/sigstore/cosign-installer
       - name: Install cosign
         uses: sigstore/cosign-installer@v3
 
@@ -81,13 +80,14 @@ jobs:
           COSIGN_EXPERIMENTAL: "true"
         run: |
           # cosign sign ${{ github.actor }}/reddvid:${{ matrix.app }}@${{ steps.build-and-push.outputs.digest }}
+          cosign public-key --key ${{ secrets.COSIGN_KEY_STORE }}
           cosign sign --key ${{ secrets.COSIGN_KEY_STORE }} \
             -a build-by=${{ env.GITHUB_ACTOR }} \
             -a repo=${{ env.GITHUB_REPOSITORY }} \
             -a repo-sha=${{ env.GITHUB_SHA }} \
-            ${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
+            ${{ github.actor }}/reddvid@${{ steps.build-and-push.outputs.digest }}
           cosign sign --key ${{ secrets.COSIGN_KEY_STORE }} \
             -a build-by=${{ env.GITHUB_ACTOR }} \
             -a repo=${{ env.GITHUB_REPOSITORY }} \
             -a repo-sha=${{ env.GITHUB_SHA }} \
-            ghcr.io/${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
+            ghcr.io/${{ github.actor }}/reddvid@${{ steps.build-and-push.outputs.digest }}
