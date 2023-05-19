@@ -49,6 +49,12 @@ jobs:
         with:
           username: ${{ secrets.MY_DOCKERHUB_USER }}
           password: ${{ secrets.MY_DOCKERHUB_TOKEN }}
+          
+      - name: Log in with Azure
+        if: github.event_name != 'pull_request'
+        uses: azure/login@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'          
 
       - name: Extract Docker metadata
         id: meta
