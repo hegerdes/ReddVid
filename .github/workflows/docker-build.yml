@@ -60,7 +60,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ github.actor }}/${{ github.event.repository.name }}:latest
+          images: ${{ github.actor }}/reddvid:latest
 
       - name: Build and push Docker image
         id: build-and-push
@@ -73,8 +73,8 @@ jobs:
           sbom: true
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            ${{ github.actor }}/${{ github.event.repository.name }}:${{ matrix.app }}-${{ github.ref_name }}
-            ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:${{ matrix.app }}-${{ github.ref_name }}
+            ${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
+            ghcr.io/${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Sign the published Docker image
@@ -82,14 +82,14 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "true"
         run: |
-          # cosign sign ${{ github.actor }}/${{ github.event.repository.name }}:${{ matrix.app }}@${{ steps.build-and-push.outputs.digest }}
+          # cosign sign ${{ github.actor }}/reddvid:${{ matrix.app }}@${{ steps.build-and-push.outputs.digest }}
           cosign sign --key ${{ secrets.COSIGN_KEY_STORE }} \
             -a build-by=${{ env.GITHUB_ACTOR }} \
             -a repo=${{ env.GITHUB_REPOSITORY }} \
             -a repo-sha=${{ env.GITHUB_SHA }} \
-            ${{ github.actor }}/${{ github.event.repository.name }}:${{ matrix.app }}-${{ github.ref_name }}
+            ${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
           cosign sign --key ${{ secrets.COSIGN_KEY_STORE }} \
             -a build-by=${{ env.GITHUB_ACTOR }} \
             -a repo=${{ env.GITHUB_REPOSITORY }} \
             -a repo-sha=${{ env.GITHUB_SHA }} \
-            ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:${{ matrix.app }}-${{ github.ref_name }}
+            ghcr.io/${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
