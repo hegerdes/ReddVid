@@ -84,6 +84,7 @@ jobs:
             -a repo-sha=${{ env.GITHUB_SHA }} \
             ${{ github.actor }}/reddvid@${{ steps.build-and-push.outputs.digest }}
           cosign sign --key cosign.key \
+            --yes --recursive \
             -a build-by=${{ env.GITHUB_ACTOR }} \
             -a repo=${{ env.GITHUB_REPOSITORY }} \
             -a repo-sha=${{ env.GITHUB_SHA }} \
