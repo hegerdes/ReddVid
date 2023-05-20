@@ -59,11 +59,12 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v4
         with:
+          sbom: true
           cache-to: type=gha
           cache-from: type=gha
           context: ${{ matrix.app }}
           platforms: linux/amd64,linux/arm64
-          sbom: true
+          build-args: COMMIT_HASH=${{ env.GITHUB_SHA }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
@@ -89,8 +90,10 @@ jobs:
             -a repo=${{ env.GITHUB_REPOSITORY }} \
             -a repo-sha=${{ env.GITHUB_SHA }} \
             ghcr.io/${{ github.actor }}/reddvid@${{ steps.build-and-push.outputs.digest }}
+          rm -rf cosign.key
 
       - name: Azure Logout
+        if: always()
         uses: azure/CLI@v1
         with:
           inlineScript: |
