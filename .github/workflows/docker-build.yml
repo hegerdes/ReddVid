@@ -5,98 +5,29 @@ on:
     branches: [ main ]
     tags: [ 'v*.*.*' ]
 
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  docker-build:
     strategy:
       matrix:
         app: [backend, frontend]
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Install cosign
-        uses: sigstore/cosign-installer@v3
-
-      - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log into registry GitHub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Log into registry DockerHub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.MY_DOCKERHUB_USER }}
-          password: ${{ secrets.MY_DOCKERHUB_TOKEN }}
-
-      - name: Log in with Azure
-        if: github.event_name != 'pull_request'
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ github.actor }}/reddvid:latest
-
-      - name: Build and push Docker image
-        id: build-and-push
-        uses: docker/build-push-action@v4
-        with:
-          sbom: true
-          cache-to: type=gha
-          cache-from: type=gha
-          context: ${{ matrix.app }}
-          platforms: linux/amd64,linux/arm64
-          build-args: COMMIT_HASH=${{ env.GITHUB_SHA }}
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
-            ghcr.io/${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
-        env:
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          COSIGN_PVT_KEY: ${{ secrets.COSIGN_PVT_KEY }}
-        run: |
-          echo "${COSIGN_PVT_KEY}" > cosign.key
-          cosign sign --key cosign.key \
-            --yes --recursive \
-            -a build-by=${{ env.GITHUB_ACTOR }} \
-            -a repo=${{ env.GITHUB_REPOSITORY }} \
-            -a repo-sha=${{ env.GITHUB_SHA }} \
-            ${{ github.actor }}/reddvid@${{ steps.build-and-push.outputs.digest }}
-          cosign sign --key cosign.key \
-            --yes --recursive \
-            -a build-by=${{ env.GITHUB_ACTOR }} \
-            -a repo=${{ env.GITHUB_REPOSITORY }} \
-            -a repo-sha=${{ env.GITHUB_SHA }} \
-            ghcr.io/${{ github.actor }}/reddvid@${{ steps.build-and-push.outputs.digest }}
-          rm -rf cosign.key
-
-      - name: Azure Logout
-        if: always()
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az logout
-            az cache purge
-            az account clear
+    uses: hegerdes/publish/.github/workflows/reusable-docker-build.yml@main
+    with:
+      build-context: ${{ matrix.app }}
+      build-tags: ${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
+      build-cache: type=gha
+      build-args: COMMIT_HASH=${{ github.sha }},COMMIT_TAG=${{ github.ref_name }}
+      build-labels: MAINTAINER=${{ github.actor }}
+      build-platforms: linux/amd64,linux/arm64
+      extra-command: echo "Checkout my website henrikgerdes.me"
+    secrets:
+      REGISTRY_USER: ${{ secrets.MY_DOCKERHUB_USER }}
+      REGISTRY_PW: ${{ secrets.MY_DOCKERHUB_TOKEN }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      COSIGN_KEY_STORE: ${{ secrets.COSIGN_PVT_KEY }}
