@@ -18,16 +18,17 @@ jobs:
     uses: hegerdes/publish/.github/workflows/reusable-docker-build.yml@main
     with:
       build-context: ${{ matrix.app }}
-      build-tags: ${{ github.actor }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
+      build-tags: ${{ github.repository_owner }}/reddvid:${{ matrix.app }}-${{ github.ref_name }},ghcr.io/${{ github.repository_owner }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
       build-cache: type=gha
       build-args: COMMIT_HASH=${{ github.sha }},COMMIT_TAG=${{ github.ref_name }}
-      build-labels: MAINTAINER=${{ github.actor }}
+      build-labels: MAINTAINER=${{ github.repository_owner }}
       build-platforms: linux/amd64,linux/arm64
       extra-command: echo "Checkout my website henrikgerdes.me"
     secrets:
-      REGISTRY_USER: ${{ secrets.MY_DOCKERHUB_USER }}
-      REGISTRY_PW: ${{ secrets.MY_DOCKERHUB_TOKEN }}
+      REGISTRY_USER: ${{ secrets.DOCKERHUB_USER }}
+      REGISTRY_PW: ${{ secrets.DOCKERHUB_TOKEN }}
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      # COSIGN_KEY_STORE: ${{ secrets.COSIGN_PVT_KEY }}
+      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      COSIGN_KEY_OR_KMS: ${{ secrets.COSIGN_KEY_STORE }}
