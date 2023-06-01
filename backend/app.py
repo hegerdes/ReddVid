@@ -62,7 +62,7 @@ def page(video_id):
     return send_from_directory(vids, video_id)
 
 
-@app.route('/health')
+@app.route('/healthz')
 def health():
     res = {"status": 'ok',
            "commit_sha": os.getenv('COMMIT_HASH', 'none'),

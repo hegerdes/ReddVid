@@ -21,11 +21,12 @@ ARG PORT=5000
 ENV PORT=$PORT
 ENV COMMIT_HASH=$COMMIT_HASH
 ENV COMMIT_TAG=$COMMIT_TAG
+ENV WORKERS=8
 LABEL commit-hash=$COMMIT_HASH
 LABEL commit-tag=$COMMIT_TAG
 
-HEALTHCHECK --interval=60s --retries=3 \
-    CMD curl --fail http://localhost:$PORT/health || kill 1
+HEALTHCHECK --interval=30s --retries=3 \
+    CMD curl --fail http://localhost:$PORT/healthz || kill 1
 
 # ENTRYPOINT [ "gunicorn", "-w", "16", "-b", "0.0.0.0:${PORT}","app:app" ]
-CMD gunicorn -w 16 -b 0.0.0.0:$PORT app:app
+CMD gunicorn -w $WORKERS -b 0.0.0.0:$PORT app:app
