@@ -6,4 +6,3 @@ tmp
 .vscode
 frontend-v2
 charts/**/*.tgz
-charts/reddvid
