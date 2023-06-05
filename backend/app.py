@@ -63,6 +63,7 @@ def page(video_id):
 
 
 @app.route('/healthz')
+@limiter.exempt
 def health():
     res = {"status": 'ok',
            "commit_sha": os.getenv('COMMIT_HASH', 'none'),
