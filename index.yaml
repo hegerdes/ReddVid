@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  reddvid-backend:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-06-05T17:56:54.121339696Z"
+    description: A Helm chart for Kubernetes
+    digest: f7ad0a93147505004b0b12e99f872252fd212f989bfa449f3f538d39af07e8da
+    name: reddvid-backend
+    type: application
+    urls:
+    - https://github.com/hegerdes/ReddVid/releases/download/reddvid-backend-0.1.0/reddvid-backend-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-06-05T17:56:54.121351696Z"
