@@ -20,9 +20,7 @@ jobs:
     with:
       build-context: ${{ matrix.app }}
       build-name: ${{ github.repository_owner }}/reddvid,ghcr.io/${{ github.repository_owner }}/reddvid
-      build-tags: |
-        ${{ matrix.app }}-${{ github.ref_name }}
-        ${{ matrix.app }}-${{ github.ref_name }}
+      build-tags: ${{ matrix.app }}-${{ github.ref_name }},${{ matrix.app }}-${{ github.ref_name }}
       build-cache: type=gha
       build-args: |
         COMMIT_HASH=${{ github.sha }}
