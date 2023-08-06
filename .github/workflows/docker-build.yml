@@ -19,7 +19,10 @@ jobs:
     uses: hegerdes/publish/.github/workflows/reusable-docker-build.yml@main
     with:
       build-context: ${{ matrix.app }}
-      build-tags: ${{ github.repository_owner }}/reddvid:${{ matrix.app }}-${{ github.ref_name }},ghcr.io/${{ github.repository_owner }}/reddvid:${{ matrix.app }}-${{ github.ref_name }}
+      build-name: ${{ github.repository_owner }}/reddvid,ghcr.io/${{ github.repository_owner }}/reddvid
+      build-tags: |
+        ${{ matrix.app }}-${{ github.ref_name }}
+        ${{ matrix.app }}-${{ github.ref_name }}
       build-cache: type=gha
       build-args: |
         COMMIT_HASH=${{ github.sha }}
