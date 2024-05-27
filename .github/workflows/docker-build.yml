@@ -2,8 +2,8 @@ name: Docker-Build
 
 on:
   push:
-    branches: [ main ]
-    tags: [ 'v*.*.*' ]
+    branches: [main]
+    tags: ["v*.*.*"]
 
 permissions:
   contents: read
@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         app: [backend, frontend]
-    uses: hegerdes/publish/.github/workflows/reusable-docker-build.yml@main
+    uses: hegerdes/helper-suite/.github/workflows/reusable-docker-build.yml@main
     with:
       build-context: ${{ matrix.app }}
       build-name: ${{ github.repository_owner }}/reddvid,ghcr.io/${{ github.repository_owner }}/reddvid
