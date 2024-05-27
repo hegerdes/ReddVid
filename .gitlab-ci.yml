@@ -8,8 +8,8 @@ stages:
   - deploy
 
 include:
-  - project: 'hegerdes/templates'
-    file: '/GitlabCI/kaniko-build.yml'
+  - project: "hegerdes/templates"
+    file: "/GitlabCI/kaniko-build.yml"
 
 build-backend:
   extends: .build_template
@@ -34,7 +34,7 @@ build-frontend:
 package:
   image:
     name: alpine/helm
-    entrypoint: ['']
+    entrypoint: [""]
   stage: build
   variables:
     CHART_VERSION: 0.1.2

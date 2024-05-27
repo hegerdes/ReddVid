@@ -19,6 +19,7 @@ jobs:
     uses: hegerdes/helper-suite/.github/workflows/reusable-docker-build.yml@main
     with:
       build-context: ${{ matrix.app }}
+      build-dockerfile: ${{ matrix.app }}/Dockerfile
       build-name: ${{ github.repository_owner }}/reddvid,ghcr.io/${{ github.repository_owner }}/reddvid
       build-tags: ${{ matrix.app }}-${{ github.ref_name }},${{ matrix.app }}-${{ github.ref_name }}
       build-cache: type=gha
