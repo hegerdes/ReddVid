@@ -1,5 +1,4 @@
 import subprocess
-import json
 import uuid
 import os
 import logging

@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import os
 import sys
-import time
-import threading
 import logging
 import helper.constants as const
 from flask import Flask, Response, json, request, jsonify, send_from_directory
