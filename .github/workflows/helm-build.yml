@@ -16,31 +16,14 @@ permissions:
 jobs:
   Release-Sub-Charts:
     strategy:
+      fail-fast: false
       matrix:
         app: [backend, frontend]
     uses: hegerdes/helper-suite/.github/workflows/reusable-helm-package.yml@main
     with:
       chart-sources-dir: charts/${{ matrix.app }}
       chart-publish: ${{ github.event_name != 'pull_request' }}
-      chart-release-version: 0.1.0
-      publish-to-gh-pages: ${{ startsWith(github.ref, 'refs/tags/') }}
-      chart-devel-version: ${{ !startsWith(github.ref, 'refs/tags/') }}
-      oci-registry-uri: registry-1.docker.io
-      oci-registry-repo: ${{ github.repository_owner }}
-    secrets:
-      OCI_REGISTRY_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-      OCI_REGISTRY_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-  Release-Mater-Charts:
-    uses: hegerdes/helper-suite/.github/workflows/reusable-helm-package.yml@main
-    needs: Release-Sub-Charts
-    with:
-      chart-sources-dir: charts/reddvid
-      chart-publish: ${{ github.event_name != 'pull_request' }}
-      chart-release-version: 0.1.0
+      chart-release-version: 0.2.0
       publish-to-gh-pages: ${{ startsWith(github.ref, 'refs/tags/') }}
       chart-devel-version: ${{ !startsWith(github.ref, 'refs/tags/') }}
       oci-registry-uri: registry-1.docker.io
