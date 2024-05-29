@@ -16,6 +16,7 @@ permissions:
 jobs:
   Release-Sub-Charts:
     strategy:
+      fail-fast: false
       matrix:
         app: [backend, frontend]
     uses: hegerdes/helper-suite/.github/workflows/reusable-helm-package.yml@main
