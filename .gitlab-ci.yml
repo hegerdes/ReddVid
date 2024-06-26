@@ -1,5 +1,3 @@
-# All available Hugo versions are listed here: https://gitlab.com/pages/hugo/container_registry
-
 stages:
   - build
   - test
@@ -8,8 +6,10 @@ stages:
   - deploy
 
 include:
-  - project: "hegerdes/templates"
-    file: "/GitlabCI/kaniko-build.yml"
+  - project: hegerdes/templates
+    file: /gitlab/ci/defaults.yml
+  - project: hegerdes/templates
+    file: /gitlab/ci/kaniko-build.yml
 
 build-backend:
   extends: .build_template
